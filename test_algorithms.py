@@ -31,6 +31,7 @@ def test_quicksort_partition(array):
     sorting.insertion_sort,
     sorting.quick_sort,
     sorting.merge_sort,
+    sorting.heap_sort,  # TODO: test heap.py. This working is basically an integration test
 ])
 @pytest.mark.parametrize('array', [
     [1, 2, 3, 4, 5],

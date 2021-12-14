@@ -149,7 +149,7 @@ def quick_sort(array: list[int], low: int = None, high: int = None) -> list[int]
 def _merge(left, right):
     left_idx = 0
     right_idx = 0
-    
+
     n_left = len(left)
     n_right = len(right)
 
@@ -162,7 +162,7 @@ def _merge(left, right):
             sorted.append(right[right_idx])
             right_idx += 1
 
-    # Once one set of indices is exhausted, just append everything else 
+    # Once one set of indices is exhausted, just append everything else
     if left_idx < n_left:
         for i in range(left_idx, n_left):
             sorted.append(left[i])
@@ -200,5 +200,16 @@ def merge_sort(array: list[int]) -> list[int]:
 
 
 def heap_sort(array: list[int]) -> list[int]:
-    """ """
-    # TODO
+    """ Use a heap data structure (see heap.py module for implementation)
+
+    Worst complexity: O(n log n)
+    Avg complexity: O(n log n)
+    Best complexity: O(n log n)
+    Space complexity: O(1)
+    Stable: no
+    """
+    # HACK: Don't let broken code here break entire module :(
+    from algorithms.heap import CrudeHeap
+
+    heap = CrudeHeap.heapify(array)
+    return [heap.pop() for _ in array]
