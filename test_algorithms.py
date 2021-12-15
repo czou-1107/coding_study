@@ -3,6 +3,7 @@ import pytest
 
 from algorithms import max_subarray
 from algorithms import sorting
+from algorithms import dutch_national_flag
 
 
 @pytest.mark.parametrize('array,max_sum', [
@@ -42,4 +43,17 @@ def test_quicksort_partition(array):
     [1, 1, 1, 1, 1],
 ])
 def test_sorting(sort_fn, array):
+    assert sorted(array) == sort_fn(array)
+
+
+@pytest.mark.parametrize('array', [
+    [0, 0, 1, 1, 2, 2],
+    [0, 1, 2, 0, 1, 2],
+])
+@pytest.mark.parametrize('sort_fn', [
+    dutch_national_flag.two_pass,
+    dutch_national_flag.three_way_partition,
+    dutch_national_flag.brute_force,
+])
+def test_dutch_national_flag(sort_fn, array):
     assert sorted(array) == sort_fn(array)
