@@ -209,7 +209,7 @@ def heap_sort(array: list[int]) -> list[int]:
     Stable: no
     """
     # HACK: Don't let broken code here break entire module :(
-    from algorithms.heap import CrudeHeap
+    from datastructs.heap import CrudeHeap
 
     heap = CrudeHeap.heapify(array)
     return [heap.pop() for _ in array]
