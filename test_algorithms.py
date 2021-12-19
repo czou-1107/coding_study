@@ -4,6 +4,7 @@ import pytest
 from algorithms import max_subarray
 from algorithms import sorting
 from algorithms import dutch_national_flag
+from algorithms import two_pointers
 
 
 @pytest.mark.parametrize('array,max_sum', [
@@ -57,3 +58,25 @@ def test_sorting(sort_fn, array):
 ])
 def test_dutch_national_flag(sort_fn, array):
     assert sorted(array) == sort_fn(array)
+
+
+@pytest.mark.parametrize('array, p, expect', [
+    ([1, 2, 3, 4, 5, 6], 20, 2),
+    ([1, 2, 3, 4, 5, 6], 35, 3),
+])
+def test_minimum_subarray_with_given_product(array, p, expect):
+    assert two_pointers.minimum_subarray_with_given_product(array, p) == expect
+
+
+def test_minimum_subarray_with_given_product_raises():
+    with pytest.raises(ValueError):
+        two_pointers.minimum_subarray_with_given_product([1, 2, 3, 4, 5, 6], 1000)
+
+
+@pytest.mark.parametrize('array, s, expect', [
+    ([1, 2, 3, 4, 6], 9, (3, 6)),
+    ([0, 2, 4, 5, 8, 12], 7, (2, 5)),
+    ([0, 1, 6, 8, 9], 5, None),
+])
+def test_exact_pairwise_sum(array, s, expect):
+    assert two_pointers.find_exact_pairwise_sum(array, s) == expect
