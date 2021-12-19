@@ -5,6 +5,7 @@ from algorithms import max_subarray
 from algorithms import sorting
 from algorithms import dutch_national_flag
 from algorithms import two_pointers
+from algorithms import fibonacci
 
 
 @pytest.mark.parametrize('array,max_sum', [
@@ -80,3 +81,23 @@ def test_minimum_subarray_with_given_product_raises():
 ])
 def test_exact_pairwise_sum(array, s, expect):
     assert two_pointers.find_exact_pairwise_sum(array, s) == expect
+
+
+@pytest.mark.parametrize('fn', [
+    fibonacci.fibonacci_recursion,
+    fibonacci.fibonacci_memoized,
+    fibonacci.fibonacci_exact,
+])
+@pytest.mark.parametrize('n,expect', [
+    (0, 0),
+    (1, 1),
+    (2, 1),
+    (3, 2),
+    (4, 3),
+    (5, 5),
+    (6, 8),
+    (10, 55),
+    (20, 6765),
+])
+def test_fibonacci(fn, n, expect):
+    assert fn(n) == expect
