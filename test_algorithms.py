@@ -6,6 +6,7 @@ from algorithms import sorting
 from algorithms import dutch_national_flag
 from algorithms import two_pointers
 from algorithms import fibonacci
+from algorithms import recursion
 
 
 @pytest.mark.parametrize('array,max_sum', [
@@ -101,3 +102,19 @@ def test_exact_pairwise_sum(array, s, expect):
 ])
 def test_fibonacci(fn, n, expect):
     assert fn(n) == expect
+
+
+@pytest.mark.parametrize('n', [1, 2, 3, 4, 10])
+def test_tower_of_hanoi(n):
+    assert recursion.TowerOfHanoi(n).evaluate(verbose=False)
+
+
+@pytest.mark.parametrize('n,k,expect', [
+    (1, 1, 'M'),
+    (2, 1, 'M'),
+    (2, 2, 'F'),
+    (3, 3, 'F'),
+    (4, 3, 'F'),
+])
+def test_family_structure_with_deterministic_children(n, k, expect):
+    assert recursion.family_structure_with_deterministic_children(n, k) == expect
