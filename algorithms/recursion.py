@@ -9,8 +9,13 @@ def tower_of_hanoi(n: int, source: int = 'source', dest: int = 'dest', aux: int 
     This solution has O(2^n) complexity """
     if n == 1:
         return [(1, source, dest)]
+    # The starting state has the entire current stack at source, aux is empty,
+    # and everything in dest is, by construction, larger than anything left.
+
+    # Move stack so that bottommost ring can be placed in terminal destination
     stack_to_aux = tower_of_hanoi(n-1, source, aux, dest)
     intermediate_step = (n, source, dest)
+    # Swap labels of source and aux, and recurse
     stack_to_dest = tower_of_hanoi(n-1, aux, dest, source)
     return [*stack_to_aux, intermediate_step, *stack_to_dest]
 
@@ -76,10 +81,10 @@ def family_structure_with_deterministic_children(n: int, k: int):
     if n == 1:
         return 'M'
     # We know that parent is (k // 2)-th child of previous generation
-    child_nbr = (k % 2) + 1  # 1-based index
+    parent_k = (k + 1) // 2  # ensure 1-based index
+    child_nbr = 1 if k % 2 == 1 else 2  # 1-based index
+    parent_gender = family_structure_with_deterministic_children(n-1, parent_k)
 
-    parent_gender = family_structure_with_deterministic_children(n-1, k // 2)
     if (parent_gender == 'M' and child_nbr == 1) or (parent_gender == 'F' and child_nbr == 2):
         return 'M'
-    else:
-        return 'F'
+    return 'F'

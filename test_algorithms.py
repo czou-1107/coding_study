@@ -7,6 +7,7 @@ from algorithms import dutch_national_flag
 from algorithms import two_pointers
 from algorithms import fibonacci
 from algorithms import recursion
+from algorithms import sliding_window
 
 
 @pytest.mark.parametrize('array,max_sum', [
@@ -115,6 +116,35 @@ def test_tower_of_hanoi(n):
     (2, 2, 'F'),
     (3, 3, 'F'),
     (4, 3, 'F'),
+    (4, 6, 'M')
 ])
 def test_family_structure_with_deterministic_children(n, k, expect):
     assert recursion.family_structure_with_deterministic_children(n, k) == expect
+
+
+@pytest.mark.parametrize('array,s,expect', [
+    ([1, 2, 3, 4, 5, 6, 7, 8, 9], 9, [2, 3, 4]),
+    ([3, 1, 6, 4, 5], 9, [4, 5]),
+    ([3, 1, 6, 4, 10], 9, []),
+])
+def test_subarray_sum_equals(array, s, expect):
+    assert sliding_window.subarray_sum_equals(array, s) == expect
+
+
+@pytest.mark.parametrize('array,k,expect', [
+    ([1, 2, 2, 1, 2, 1], 3, -1),
+    ([1, 2, 2, 1, 2, 1], 2, 2),
+    ([1, 1, 1, 2, 2, 3, 3, 2], 3, 4),
+    ([1, 1, 1, 2, 2, 3, 3, 2, 1], 3, 3),
+])
+def test_subarray_sum_equals(array, k, expect):
+    assert sliding_window.smallest_subarray_with_k_distinct(array, k) == expect
+
+
+@pytest.mark.parametrize('array,expect', [
+    ([-7, 1, 5, 2, -4, 3, 0], [3, 6]),
+    ([-2, 1, 9, 2, -6, 3, 0], [2]),
+    ([1, 2, 3, 4, 5], []),
+])
+def test_equilibrium_indices(array, expect):
+    assert sliding_window.equilibrium_indices(array) == expect
