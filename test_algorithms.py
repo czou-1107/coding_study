@@ -148,3 +148,15 @@ def test_subarray_sum_equals(array, k, expect):
 ])
 def test_equilibrium_indices(array, expect):
     assert sliding_window.equilibrium_indices(array) == expect
+
+
+@pytest.mark.parametrize('array,expect', [
+    ([[3, 4, 1, 2], [2, 1, 8, 9], [4, 7, 8, 1]], 13)
+])
+@pytest.mark.parametrize('solution_method', [
+    'solve_recursive', 'solve_memoize', 'solve_dp'
+])
+def test_min_cost_path(array, solution_method, expect):
+    solver = recursion.MinCostPath(array, allow_diagonal_move=True)
+    solution = getattr(solver, solution_method)()
+    assert solution == expect

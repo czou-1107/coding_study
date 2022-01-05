@@ -6,7 +6,9 @@ from functools import wraps
 
 
 def fibonacci_recursion(n: int, /) -> int:
-    """ Compute values recursively """
+    """ Compute values recursively.
+
+    Very inefficient: time complexity of O(2^n) """
     if n == 0:
         return 0
     elif n == 1:
@@ -17,6 +19,9 @@ def fibonacci_recursion(n: int, /) -> int:
 
 def _memoize(f):
     # A built-in solution would be functools.lru_cache, which also limits cache size
+    # memoizing fibonacci reduces complexity to O(n)
+    # This implementation is a "top-down" DP approach, where the call stack is produced
+    # from n to 1
     cache = {}
 
     @wraps(f)

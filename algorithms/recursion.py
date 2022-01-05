@@ -1,6 +1,12 @@
 """
 Some problems that can be solved using recursion
 """
+try:
+    import numpy as np
+    _numpy_available = True
+except ImportError:
+    print('numpy not detected in environment. Some solutions will fail to run!')
+    _numpy_available = False
 
 
 def tower_of_hanoi(n: int, source: int = 'source', dest: int = 'dest', aux: int = 'aux'):
@@ -88,3 +94,90 @@ def family_structure_with_deterministic_children(n: int, k: int):
     if (parent_gender == 'M' and child_nbr == 1) or (parent_gender == 'F' and child_nbr == 2):
         return 'M'
     return 'F'
+
+
+class MinCostPath:
+    """ Various implementations of a minimum-cost path for matrix traversal
+
+    Given a matrix :costs: of shape (m, n) the goal is to traverse from (0, 0) (top-left)
+    to (m-1, n-1) (bottom right) and moving through (i, j) costs the corresponding value
+
+    See also: Levenshtein distance
+    """
+    def __init__(self, costs, allow_diagonal_move: bool = True):
+        if isinstance(costs, list):
+            costs = np.array(costs)
+
+        self.costs = costs
+        self.allow_diagonal_move = allow_diagonal_move
+
+        self._max_cost = np.inf
+
+
+    def solve_recursive(self, m=None, n=None):
+        """ Naive solution with exponential complexity (3^n if diagonal allowed else 2^n)
+        """
+        if m is None and n is None:  # Main entrypoint
+            m = self.costs.shape[0] - 1
+            n = self.costs.shape[1] - 1
+
+        if m == 0 and n == 0:  # Base case
+            return self.costs[m, n]
+        if m < 0 or n < 0:  # Out-of-bounds
+            return self._max_cost
+
+        return self.costs[m, n] + min(
+            self.solve_recursive(m-1, n),  # Move 1 up
+            self.solve_recursive(m, n-1),  # Move 1 left
+            # Check diagonal move if allowed. Otherwise set it to out-of-bounds
+            self.solve_recursive(m-1, n-1) if self.allow_diagonal_move else self._max_cost,
+        )
+
+
+    def solve_memoize(self, m=None, n=None):
+        if m is None and n is None:  # Main entrypoint
+            m = self.costs.shape[0] - 1
+            n = self.costs.shape[1] - 1
+            # Assume that all distances are non-negative, so we can simply check if
+            # cache = -1 (another method is to just use dict keys)
+            self._costs_from_origin = -np.ones_like(self.costs)
+            self._costs_from_origin[0, 0] = self.costs[0, 0]  # Base case
+
+        if m < 0 or n < 0:  # Out-of-bounds
+            return self._max_cost
+        if self._costs_from_origin[m, n] != -1:  # Has been computed previously
+            return self._costs_from_origin[m, n]
+
+        current_cost = self.costs[m, n] + min(
+            self.solve_memoize(m-1, n),  # Move 1 up
+            self.solve_memoize(m, n-1),  # Move 1 left
+            # Check diagonal move if allowed. Otherwise set it to out-of-bounds
+            self.solve_memoize(m-1, n-1) if self.allow_diagonal_move else self._max_cost,
+        )
+        self._costs_from_origin[m, n] = current_cost
+        return current_cost
+
+
+    def solve_dp(self):
+        # This is technically the same as memoization, but constructs the cost from origin
+        # matrix directly (in a "bottom-up" vs "top-down") approach
+        # Using this approach it is easy to see complexity is reduced to O(mn)
+        costs_from_origin = np.zeros_like(self.costs)
+        costs_from_origin[0, 0] = self.costs[0, 0]  # Base case
+
+        # Fill the first row and column with allowed movement costs (e.g. straight down/right)
+        for i in range(1, self.costs.shape[0]):
+            costs_from_origin[i, 0] = costs_from_origin[i-1, 0] + self.costs[i, 0]
+        for j in range(1, self.costs.shape[1]):
+            costs_from_origin[0, j] = costs_from_origin[0, j-1] + self.costs[0, j]
+
+        # Fill rest of the array
+        for i in range(1, self.costs.shape[0]):
+            for j in range(1, self.costs.shape[1]):
+                costs_from_origin[i, j] = self.costs[i, j] + min(
+                    costs_from_origin[i-1, j],
+                    costs_from_origin[i, j-1],
+                    costs_from_origin[i-1, j-1] if self.allow_diagonal_move else self._max_cost,
+                )
+
+        return costs_from_origin[-1, -1]

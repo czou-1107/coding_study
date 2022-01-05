@@ -86,6 +86,35 @@ def levenshtein_wagner_fischer(s1: str, s2: str) -> int:
     return distances[-1, -1]
 
 
+def lcs(s1: str, s2: str) -> int:
+    """ Longest common subsequence, which does *not* have to be contiguous """
+    # # This naive recursive implementation has O(2**(|s1| + |s2|)) complexity,
+    # # since you must traverse down both strings. In an even worse implementation,
+    # # you could also take max over lcs(s1[1:], s2[1:]), moving to O(3**|s1| + |s2|),
+    # # but that is covered by the first two cases
+    # if s1 == '' or s2 == '':
+    #     return 0
+    # if s1[0] == s2[0]:
+    #     return 1 + lcs(s1[1:], s2[1:])
+    # return max(lcs(s1, s2[1:]),
+    #            lcs(s1[1:], s2))
+
+    # The DP implementation memoizes the lcs for prefixes:
+    import numpy as np
+
+    m, n = len(s1), len(s2)
+    # Let the first row and column denote comparison to the empty string (so = 0)
+    distances = np.zeros((m + 1, n + 1), dtype=np.int8)
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if s1[i-1] == s2[j-1]:  # Strings are still 0-based index!
+                distances[i, j] = distances[i-1, j-1] + 1
+            else:
+                distances[i, j] = max(distances[i, j-1], distances[i-1, j])
+    return distances[-1, -1]
+
+
 def jaro_winkler(s1: str, s2: str) -> int:
     """ Allow only transposition """
     pass
