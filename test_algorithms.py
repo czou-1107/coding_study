@@ -8,6 +8,7 @@ from algorithms import two_pointers
 from algorithms import fibonacci
 from algorithms import recursion
 from algorithms import sliding_window
+from algorithms import dp
 
 
 @pytest.mark.parametrize('array,max_sum', [
@@ -160,3 +161,23 @@ def test_min_cost_path(array, solution_method, expect):
     solver = recursion.MinCostPath(array, allow_diagonal_move=True)
     solution = getattr(solver, solution_method)()
     assert solution == expect
+
+
+@pytest.mark.parametrize('array,expect', [
+    ([10, 2, 1, 8, 1, 3], 57),
+])
+def test_minimum_cost_of_reducing_array(array, expect):
+    assert dp.minimum_cost_of_reducing_array(array) == expect
+
+
+@pytest.mark.parametrize('string,pat,expect', [
+    ('abcde', 'ab?de', True),
+    ('abcde', 'abc', False),
+    ('abcde', '*', True),
+    ('abcde', 'ab*e', True),
+    ('abcde', '*f', False),
+    ('abcde', '????e', True),
+    ('abcde', '???', False),
+])
+def test_me(string, pat, expect):
+    assert dp.wildcard_matching(string, pat) == expect

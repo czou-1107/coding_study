@@ -5,7 +5,6 @@ conditions. Typically they fall in two types:
 - Fixed window, e.g. max sum subarray of size k
 - Variable window, e.g. maximum subarray
 """
-from collections import Counter
 
 
 def subarray_sum_equals(array: list, s: int) -> list:
